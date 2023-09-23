@@ -257,7 +257,7 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <Button type="submit">Sumbit</Button>
+        <Button type="submit" className="ml-5">Sumbit</Button>
       </form>
     </>
   );
