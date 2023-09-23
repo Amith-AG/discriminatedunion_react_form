@@ -115,8 +115,12 @@ export default function Home() {
                         <SelectItem value="BULK">Bulk</SelectItem>
                       </SelectContent>
                     </Select>
+                    
                   )}
                 />
+                {errors.modes && (
+                  <span className="text-red-500">{errors.modes.message}</span>
+                )}
               </div>
 
               {/* SELECT==FCL */}
@@ -185,6 +189,11 @@ export default function Home() {
                         </Select>
                       )}
                     />
+                     {(errors as any).l_container_type && (
+                        <span className="text-red-500">
+                          {(errors as any).l_container_type.message}
+                        </span>
+                      )}
                     <Input
                       placeholder="Enter the Quantity"
                       {...register("l_loading")}
