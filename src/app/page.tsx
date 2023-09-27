@@ -1,16 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  Controller,
-  useForm,
-} from "react-hook-form";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Controller, useForm } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -18,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SearchBox } from "@/components/searchBox";
 import { FormSchema } from "@/schema/zodSchema";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -32,10 +25,23 @@ export default function Home() {
     control,
     register,
     handleSubmit,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
+    defaultValues:{
+      from: {
+        address: "",
+        latitude: undefined,
+        longitude: undefined,
+      },
+      to: {
+        address: "",
+        latitude: undefined,
+        longitude: undefined,
+      },
+    },
   });
 
   function onSubmit(data: FormValues) {
@@ -63,15 +69,30 @@ export default function Home() {
             <div className="sm:flex sm:space-x-4">
               <div className="sm:w-1/2 mt-5">
                 <Label className="mb-2">From</Label>
-                <Input placeholder="from" {...register("from")} />
+                <SearchBox
+                  onSelectAddress={(address, latitude, longitude) => {
+                    setValue("from.address", address);
+                    if (latitude !== null && longitude !== null) {
+                      setValue("from.latitude", latitude);
+                      setValue("from.longitude", longitude);
+                    }
+                  }}
+                />
                 {errors.from && (
                   <span className="text-red-500">{errors.from.message}</span>
                 )}
               </div>
               <div className="sm:w-1/2 mt-5">
                 <Label className="mb-2">To</Label>
-                <Input placeholder="to" {...register("to")} />
-
+                <SearchBox
+                  onSelectAddress={(address, latitude, longitude) => {
+                    setValue("to.address", address);
+                    if (latitude !== null && longitude !== null) {
+                      setValue("to.latitude", latitude);
+                      setValue("to.longitude", longitude);
+                    }
+                  }}
+                />
                 {errors.to && (
                   <span className="text-red-500">{errors.to.message}</span>
                 )}
@@ -115,7 +136,6 @@ export default function Home() {
                         <SelectItem value="BULK">Bulk</SelectItem>
                       </SelectContent>
                     </Select>
-                    
                   )}
                 />
                 {errors.modes && (
@@ -167,7 +187,6 @@ export default function Home() {
                           value={field.value}
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          
                         >
                           <SelectTrigger>
                             {field.value ? (
@@ -189,11 +208,11 @@ export default function Home() {
                         </Select>
                       )}
                     />
-                     {(errors as any).l_container_type && (
-                        <span className="text-red-500">
-                          {(errors as any).l_container_type.message}
-                        </span>
-                      )}
+                    {(errors as any).l_container_type && (
+                      <span className="text-red-500">
+                        {(errors as any).l_container_type.message}
+                      </span>
+                    )}
                     <Input
                       placeholder="Enter the Quantity"
                       {...register("l_loading")}
@@ -247,17 +266,16 @@ export default function Home() {
                   {...register("comment")}
                 />
                 {errors.comment && (
-                      <span className="text-red-500">
-                        {errors.comment.message}
-                      </span>
-                    )}
-                
+                  <span className="text-red-500">{errors.comment.message}</span>
+                )}
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Button type="submit" className="ml-5">Sumbit</Button>
+        <Button type="submit" className="ml-5">
+          Sumbit
+        </Button>
       </form>
     </>
   );

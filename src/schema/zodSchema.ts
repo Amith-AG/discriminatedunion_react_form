@@ -1,8 +1,16 @@
 import * as z from "zod";
 
 const fclSchema = z.object({
-  from: z.string().min(1),
-  to: z.string().min(1),
+  from:z.object({
+    address:z.string(),
+    latitude:z.number().min(-90).max(90),
+    longitude:z.number().min(-180).max(180),
+  }),
+  to:z.object({
+    address:z.string(),
+    latitude:z.number().min(-90).max(90),
+    longitude:z.number().min(-180).max(180),
+  }),
   modes: z.literal("FCL"),
   f_quantity: z.coerce.number().min(1).max(32767),
   f_weight: z.coerce.number().min(1).max(32767),
